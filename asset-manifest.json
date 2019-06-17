@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/ghana_gnpc_commodity/static/css/main.70c330c8.chunk.css",
+    "main.js": "/ghana_gnpc_commodity/static/js/main.9eb926fe.chunk.js",
+    "main.js.map": "/ghana_gnpc_commodity/static/js/main.9eb926fe.chunk.js.map",
+    "runtime~main.js": "/ghana_gnpc_commodity/static/js/runtime~main.a9f880e4.js",
+    "runtime~main.js.map": "/ghana_gnpc_commodity/static/js/runtime~main.a9f880e4.js.map",
+    "static/js/2.5754a245.chunk.js": "/ghana_gnpc_commodity/static/js/2.5754a245.chunk.js",
+    "static/js/2.5754a245.chunk.js.map": "/ghana_gnpc_commodity/static/js/2.5754a245.chunk.js.map",
+    "index.html": "/ghana_gnpc_commodity/index.html",
+    "precache-manifest.2cf7d11b70eec7241df53b9909c9b1ba.js": "/ghana_gnpc_commodity/precache-manifest.2cf7d11b70eec7241df53b9909c9b1ba.js",
+    "service-worker.js": "/ghana_gnpc_commodity/service-worker.js",
+    "static/css/main.70c330c8.chunk.css.map": "/ghana_gnpc_commodity/static/css/main.70c330c8.chunk.css.map",
+    "static/media/gnpc_commodity_exports.csv": "/ghana_gnpc_commodity/static/media/gnpc_commodity_exports.97d62662.csv",
+    "static/media/logo.svg": "/ghana_gnpc_commodity/static/media/logo.5d5d9eef.svg"
+  }
+}
