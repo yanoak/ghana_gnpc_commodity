@@ -2,7 +2,7 @@
   "name": "ghana_gnpc_commodity",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://seunzone.github.io/ghana_gnpc_commodity",
+  "homepage": "https://yanoak.github.io/ghana_gnpc_commodity",
   "dependencies": {
     "d3-axis": "^1.0.12",
     "d3-collection": "^1.0.7",

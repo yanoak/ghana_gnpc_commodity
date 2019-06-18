@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import styles from './MainVizComponent.scss'
 import _ from 'lodash'
-import { select } from 'd3-selection'
+import { select, selectAll } from 'd3-selection'
 import { scaleBand,scaleLinear,scaleQuantile,scaleSequential } from 'd3-scale'
 import { interpolateReds } from 'd3-scale-chromatic'
 import { axisBottom, axisLeft } from 'd3-axis'
@@ -37,6 +37,8 @@ class MainVizComponent extends Component {
 		// const barHeight = 5;
 
 		// var durationFormat = format(".1f");
+		var numFormat = format(',.2f');
+
 		var y1 = scaleLinear()
     	.range([height, 0]);
 
@@ -50,22 +52,25 @@ class MainVizComponent extends Component {
         spacing: 18
       },
       leftTitle: "Lifting",
-      rightTitle: "Customer & Destination",
+      rightTitle: "Buyer & Destination",
       leftSubTitle: "Date of Sale",
-      rightSubTitle: "Payment Receipt Date",
+      rightSubTitle: "Payment Due Date",
       labelGroupOffset: 5,
       labelKeyOffset: 50,
 			radius: 6,
 			subTitleYShift: 20,
       // Reduce this to turn on detail-on-hover version
-      unfocusOpacity: 0.3
+			unfocusOpacity: 0.3,
+			revWidthMultiple: 3.5,
+			priceWidthMultiple: 1.5
 		}
 		
 		var smallConfig = {
-			maxwidth: 40,
+			maxwidth: 50,
 			height: 10,
-			color: '#00cc66',
-			highlightColor: '#f48320',
+			// color: '#c59800',
+			color: '#ecb600',
+			highlightColor: '#CE1126',
 			border: '#eee',
 			volWidth: 3,
 			maxRevWidth: 400,
@@ -85,9 +90,9 @@ class MainVizComponent extends Component {
 						{label:"Lifting", value:d.Lifting},
 						{label:"Date of Sale", value:d.Date_of_sale.format("D MMM YYYY")},
 						{label:"Payment Receipt Date", value:d.Payment_receipt_date.format("D MMM YYYY")},
-						{label:"Price", value:d.Price},
-						{label:"Volume", value:d.Volume},
-						{label:"Revenue", value:d.Revenue},
+						{label:"Price", value:"US$ "+numFormat(d.Price)+" per barrel"},
+						{label:"Volume", value:numFormat(d.Volume)+" barrels"},
+						{label:"Revenue", value:"US$ "+numFormat(d.Revenue)},
 						{label:"Buyer", value:d.Buyer},
 						{label:"Destination", value:d.Destination}
 					]
@@ -257,11 +262,15 @@ class MainVizComponent extends Component {
 			.range([0, smallConfig.maxwidth])
 			.domain([0,70]); 
 
+		function makeClass(d) {
+			return d.Lifting.split(" ").join("").toLowerCase();
+		} 
+
 		priceBars.selectAll(".bar")
       .data(data)
     .enter().append("rect")
-      .attr("class", "bar")
-      .attr("x", function(d) { return config.width*2; })
+      .attr("class", function(d) { return "bar " + makeClass(d);})
+      .attr("x", function(d) { return config.width*config.priceWidthMultiple; })
       .attr("width", function(d) { return smallX(+d.Price) })
       .attr("y", function(d,i) { return d.yRightPosition - smallConfig.height/2; })
       .attr("fill", function(d) { return smallConfig.color; })
@@ -269,18 +278,24 @@ class MainVizComponent extends Component {
 			.attr("height", function(d) { return smallConfig.height; })
 			.on('mouseover', function(d) {
         tooltip.show(d,this);
-        select(this)
-          .attr("fill", smallConfig.highlightColor);
+        selectAll("."+makeClass(d))
+					.attr("fill", smallConfig.highlightColor);
+					
+				selectAll(".annote."+ makeClass(d))
+					.attr("display", "block")
 			})
 			.on('mouseout', function(d) {
         tooltip.hide();
-        select(this)
-          .attr("fill", smallConfig.color);
+        selectAll("."+makeClass(d))
+					.attr("fill", smallConfig.color);
+					
+				selectAll(".annote."+ makeClass(d))
+					.attr("display", "none")
       })
 			
 		titles.append("text")
 			.attr("text-anchor", "start")
-			.attr("x", margin.left + config.width*3)
+			.attr("x", margin.left + config.width*(config.priceWidthMultiple+1))
 			.attr("dx", -10)
 			.attr("dy", -margin.top / 4)
 			.text(smallConfig.priceTitle);
@@ -294,7 +309,7 @@ class MainVizComponent extends Component {
 
 		titles.append("text")
 			.attr("text-anchor", "start")
-			.attr("x", margin.left + config.width*4)
+			.attr("x", margin.left + config.width*config.revWidthMultiple)
 			.attr("dx", 0)
 			.attr("dy", -margin.top / 4)
 			.text(smallConfig.revTitle);
@@ -308,22 +323,23 @@ class MainVizComponent extends Component {
 
 		var volBars = [];
 		var revBars = [];
+		var annotations = [];
 
 		data.forEach(function(currentBatch,i) {
 			volBars.push(node.append("g")
 				.attr("transform", "translate(" + 10 + "," + margin.top + ")")
-				.attr("class", "volume"));
+				.attr("class", function(d) { return "volume";}))
 
 			revBars.push(node.append("g")
-				.attr("transform", "translate(" + (margin.left + config.width*4) + "," + margin.top + ")")
-				.attr("class", "volume"));
+				.attr("transform", "translate(" + (margin.left + config.width*config.revWidthMultiple) + "," + margin.top + ")")
+				.attr("class", function(d) { return "rev";}));
 
 			// console.log(volBars);
 
 			volBars[i].selectAll(".bar")
 				.data(volData[i])
 			.enter().append("rect")
-				.attr("class", "bar")
+			.attr("class", function(d) { return "bar " + makeClass(currentBatch);})
 				.attr("x", function(d,j) { return smallConfig.volWidth*j; })
 				.attr("width", function(d) { return smallConfig.volWidth })
 				.attr("y", function(d,j) { return currentBatch.yLeftPosition - smallConfig.height/2; })
@@ -332,19 +348,25 @@ class MainVizComponent extends Component {
 				.attr("height", function(d) { return smallConfig.height; })
 				.on('mouseover', function(d) {
 					tooltip.show(currentBatch,this);
-					select(this)
+					selectAll("."+makeClass(currentBatch))
 						.attr("fill", smallConfig.highlightColor);
+					
+					selectAll(".annote."+ makeClass(currentBatch))
+						.attr("display", "block")
 				})
 				.on('mouseout', function(d) {
 					tooltip.hide();
-					select(this)
+					selectAll("."+makeClass(currentBatch))
 						.attr("fill", smallConfig.color);
+					
+					selectAll(".annote."+ makeClass(currentBatch))
+						.attr("display", "none")
 				})
 
 			revBars[i].selectAll(".bar")
 				.data(volData[i])
 			.enter().append("rect")
-				.attr("class", "bar")
+				.attr("class", function(d) { return "bar " + makeClass(currentBatch);})
 				.attr("x", function(d,j) { 
 					var boxWidth = smallX(+currentBatch.Price)
 					var boxesPerRow = Math.floor(smallConfig.maxRevWidth/boxWidth);
@@ -363,14 +385,59 @@ class MainVizComponent extends Component {
 				.attr("height", function(d) { return smallConfig.height; })
 				.on('mouseover', function(d) {
 					tooltip.show(currentBatch,this);
-					select(this)
+					selectAll("."+makeClass(currentBatch))
 						.attr("fill", smallConfig.highlightColor);
+					selectAll(".annote."+ makeClass(currentBatch))
+						.attr("display", "block")
 				})
 				.on('mouseout', function(d) {
 					tooltip.hide();
-					select(this)
+					selectAll("."+makeClass(currentBatch))
 						.attr("fill", smallConfig.color);
+					selectAll(".annote."+ makeClass(currentBatch))
+						.attr("display", "none")
 				})
+
+
+			node.append("g")
+				.attr("transform", "translate(" + 0 + "," + margin.top + ")")
+				.append("text")
+				.attr("text-anchor", "left")
+				.attr("class", function(d) { return "annote " + makeClass(currentBatch);})
+				.attr("x", 10)
+				.attr("dx", 0)
+				.attr("y", currentBatch.yLeftPosition)
+				.attr("dy", -10)
+				.attr("fill", smallConfig.color)
+				.attr("display", "none")
+				.text(numFormat(currentBatch.Volume)+" barrels")
+
+			node.append("g")
+				.attr("transform", "translate(" + 0 + "," + margin.top + ")")
+				.append("text")
+				.attr("text-anchor", "middle")
+				.attr("class", function(d) { return "annote " + makeClass(currentBatch);})
+				.attr("x", margin.left + config.width*(config.priceWidthMultiple+1.25))
+				.attr("dx", 0)
+				.attr("y", currentBatch.yRightPosition)
+				.attr("dy", -10)
+				.attr("fill", smallConfig.color)
+				.attr("display", "none")
+				.text("US$ "+numFormat(currentBatch.Price)+" per barrel")
+
+			node.append("g")
+				.attr("transform", "translate(" + 0 + "," + margin.top + ")")
+				.append("text")
+				.attr("text-anchor", "left")
+				.attr("class", function(d) { return "annote " + makeClass(currentBatch);})
+				.attr("x", margin.left + config.width*(config.revWidthMultiple+.5))
+				.attr("dx", 0)
+				.attr("y", currentBatch.yRightPosition)
+				.attr("dy", -10)
+				.attr("fill", smallConfig.color)
+				.attr("display", "none")
+				.text("US$ "+numFormat(currentBatch.Revenue) + " in revenue")
+			
 		})
 
 
