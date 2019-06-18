@@ -1,19 +1,19 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "05911317ab0f4476b3e2b8829ad05eda",
+    "revision": "47fa13f11af1dafcca6c45f2e835c8d1",
     "url": "/ghana_gnpc_commodity/index.html"
   },
   {
-    "revision": "59720fab17b84433c7f2",
-    "url": "/ghana_gnpc_commodity/static/css/main.70c330c8.chunk.css"
+    "revision": "da6101af14023c3ecf78",
+    "url": "/ghana_gnpc_commodity/static/css/main.81236b98.chunk.css"
   },
   {
-    "revision": "b05690f4311d12b267ea",
-    "url": "/ghana_gnpc_commodity/static/js/2.5754a245.chunk.js"
+    "revision": "bd90d3c7a67ec4f2cf70",
+    "url": "/ghana_gnpc_commodity/static/js/2.fdbd2c83.chunk.js"
   },
   {
-    "revision": "59720fab17b84433c7f2",
-    "url": "/ghana_gnpc_commodity/static/js/main.9eb926fe.chunk.js"
+    "revision": "da6101af14023c3ecf78",
+    "url": "/ghana_gnpc_commodity/static/js/main.9ad256ab.chunk.js"
   },
   {
     "revision": "4b98e433b7b5bdb3f21d",
