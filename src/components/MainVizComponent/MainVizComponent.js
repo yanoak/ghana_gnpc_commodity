@@ -34,6 +34,7 @@ class MainVizComponent extends Component {
 
 		console.log(data);
 
+		data = _.sortBy(data,"Date_of_sale")
 		// const barHeight = 5;
 
 		// var durationFormat = format(".1f");
@@ -269,7 +270,7 @@ class MainVizComponent extends Component {
 		priceBars.selectAll(".bar")
       .data(data)
     .enter().append("rect")
-      .attr("class", function(d) { return "bar " + makeClass(d);})
+      .attr("class", function(d) { return "bar price " + makeClass(d);})
       .attr("x", function(d) { return config.width*config.priceWidthMultiple; })
       .attr("width", function(d) { return smallX(+d.Price) })
       .attr("y", function(d,i) { return d.yRightPosition - smallConfig.height/2; })
@@ -339,7 +340,7 @@ class MainVizComponent extends Component {
 			volBars[i].selectAll(".bar")
 				.data(volData[i])
 			.enter().append("rect")
-			.attr("class", function(d) { return "bar " + makeClass(currentBatch);})
+			.attr("class", function(d) { return "bar vol " + makeClass(currentBatch);})
 				.attr("x", function(d,j) { return smallConfig.volWidth*j; })
 				.attr("width", function(d) { return smallConfig.volWidth })
 				.attr("y", function(d,j) { return currentBatch.yLeftPosition - smallConfig.height/2; })
@@ -366,7 +367,7 @@ class MainVizComponent extends Component {
 			revBars[i].selectAll(".bar")
 				.data(volData[i])
 			.enter().append("rect")
-				.attr("class", function(d) { return "bar " + makeClass(currentBatch);})
+				.attr("class", function(d) { return "bar rev " + makeClass(currentBatch);})
 				.attr("x", function(d,j) { 
 					var boxWidth = smallX(+currentBatch.Price)
 					var boxesPerRow = Math.floor(smallConfig.maxRevWidth/boxWidth);
@@ -378,7 +379,13 @@ class MainVizComponent extends Component {
 					var boxWidth = smallX(+currentBatch.Price)
 					var boxesPerRow = Math.floor(smallConfig.maxRevWidth/boxWidth);
 					var row = Math.floor(j/boxesPerRow);
-					return currentBatch.yRightPosition - smallConfig.height/2 + (smallConfig.height*row); 
+
+					var returnVal = currentBatch.yRightPosition - smallConfig.height/2 + (smallConfig.height*row);
+					data[i].yRevBottom = data[i].yRevBottom > returnVal + smallConfig.height 
+						? data[i].yRevBottom
+						: returnVal + smallConfig.height;
+					
+					return returnVal; 
 				})
 				.attr("fill", function(d) { return smallConfig.color; })
 				.attr("stroke", function(d) { return smallConfig.border; })
@@ -398,25 +405,25 @@ class MainVizComponent extends Component {
 						.attr("display", "none")
 				})
 
-
+			// Volume Annotation
 			node.append("g")
 				.attr("transform", "translate(" + 0 + "," + margin.top + ")")
 				.append("text")
 				.attr("text-anchor", "left")
-				.attr("class", function(d) { return "annote " + makeClass(currentBatch);})
+				.attr("class", function(d) { return "annote vol " + makeClass(currentBatch);})
 				.attr("x", 10)
 				.attr("dx", 0)
-				.attr("y", currentBatch.yLeftPosition)
-				.attr("dy", -10)
+				.attr("y", currentBatch.yLeftPosition - 10)
 				.attr("fill", smallConfig.color)
 				.attr("display", "none")
 				.text(numFormat(currentBatch.Volume)+" barrels")
 
+			// Price Annotation
 			node.append("g")
 				.attr("transform", "translate(" + 0 + "," + margin.top + ")")
 				.append("text")
 				.attr("text-anchor", "middle")
-				.attr("class", function(d) { return "annote " + makeClass(currentBatch);})
+				.attr("class", function(d) { return "annote price " + makeClass(currentBatch);})
 				.attr("x", margin.left + config.width*(config.priceWidthMultiple+1.25))
 				.attr("dx", 0)
 				.attr("y", currentBatch.yRightPosition)
@@ -425,21 +432,55 @@ class MainVizComponent extends Component {
 				.attr("display", "none")
 				.text("US$ "+numFormat(currentBatch.Price)+" per barrel")
 
+			// Revenue Annotation
 			node.append("g")
 				.attr("transform", "translate(" + 0 + "," + margin.top + ")")
 				.append("text")
 				.attr("text-anchor", "left")
-				.attr("class", function(d) { return "annote " + makeClass(currentBatch);})
+				.attr("class", function(d) { return "annote rev " + makeClass(currentBatch);})
 				.attr("x", margin.left + config.width*(config.revWidthMultiple+.5))
 				.attr("dx", 0)
-				.attr("y", currentBatch.yRightPosition)
-				.attr("dy", -10)
+				// .attr("y", currentBatch.yRightPosition - 10)
+				.attr("y", function(d) { 
+					data[i].yRevTop = currentBatch.yRightPosition - 10;
+					return currentBatch.yRightPosition-10;
+				})
 				.attr("fill", smallConfig.color)
 				.attr("display", "none")
-				.text("US$ "+numFormat(currentBatch.Revenue) + " in revenue")
+				.text("US$ "+numFormat(currentBatch.Revenue) + " in revenue ") 
+					// + numFormat(data[i].yRevTop) + " " + numFormat(data[i].yRevBottom) )
 			
 		})
 
+		console.log(data);
+
+		// Adjust Rev Blocks so they don't overlap
+		// Start from the bottom and keep pushing all the ones at the top up a bit untill
+		// they no longer overlap
+		var vCumulativeDelta = 0;
+		for (var j = data.length-1; j > 0; j--) {
+			for (var i = data.length-1; i > 0; i--) {
+        console.log(data[i].Lifting,
+          data[i].yRevTop,
+          data[i-1].Lifting,
+          data[i-1].yRevBottom,
+          data[i].yRevTop-data[i-1].yRevBottom);
+        
+        vCumulativeDelta =  data[i-1].yRevBottom > data[i].yRevTop
+          ? (data[i-1].yRevBottom-data[i].yRevTop)
+          : 0;
+
+        if (vCumulativeDelta > 0) {
+          selectAll(".rev." + makeClass(data[i-1]))
+          .attr("transform", "translate(" + 0 + "," + (-vCumulativeDelta) + ")")
+          // .attr("dy", vCumulativeDelta);
+          
+          data[i-1].yRevBottom -= vCumulativeDelta;
+          data[i-1].yRevTop -= vCumulativeDelta;
+          break;
+        }
+			}
+		}
 
 		node.call(tooltip);
 
