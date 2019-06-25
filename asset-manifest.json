@@ -1,17 +1,20 @@
 {
   "files": {
-    "main.css": "/ghana_gnpc_commodity/static/css/main.81236b98.chunk.css",
-    "main.js": "/ghana_gnpc_commodity/static/js/main.58ae8f52.chunk.js",
-    "main.js.map": "/ghana_gnpc_commodity/static/js/main.58ae8f52.chunk.js.map",
+    "main.css": "/ghana_gnpc_commodity/static/css/main.43b79afe.chunk.css",
+    "main.js": "/ghana_gnpc_commodity/static/js/main.7dfcaacd.chunk.js",
+    "main.js.map": "/ghana_gnpc_commodity/static/js/main.7dfcaacd.chunk.js.map",
     "runtime~main.js": "/ghana_gnpc_commodity/static/js/runtime~main.a9f880e4.js",
     "runtime~main.js.map": "/ghana_gnpc_commodity/static/js/runtime~main.a9f880e4.js.map",
-    "static/js/2.eb3d798c.chunk.js": "/ghana_gnpc_commodity/static/js/2.eb3d798c.chunk.js",
-    "static/js/2.eb3d798c.chunk.js.map": "/ghana_gnpc_commodity/static/js/2.eb3d798c.chunk.js.map",
+    "static/css/2.5b9974be.chunk.css": "/ghana_gnpc_commodity/static/css/2.5b9974be.chunk.css",
+    "static/js/2.148f5673.chunk.js": "/ghana_gnpc_commodity/static/js/2.148f5673.chunk.js",
+    "static/js/2.148f5673.chunk.js.map": "/ghana_gnpc_commodity/static/js/2.148f5673.chunk.js.map",
     "index.html": "/ghana_gnpc_commodity/index.html",
-    "precache-manifest.ef5703fd9d2882c6c1fe7c6cc6a0d4ad.js": "/ghana_gnpc_commodity/precache-manifest.ef5703fd9d2882c6c1fe7c6cc6a0d4ad.js",
+    "precache-manifest.9cf87a8b1d5f052d25d305ba407e7293.js": "/ghana_gnpc_commodity/precache-manifest.9cf87a8b1d5f052d25d305ba407e7293.js",
     "service-worker.js": "/ghana_gnpc_commodity/service-worker.js",
-    "static/css/main.81236b98.chunk.css.map": "/ghana_gnpc_commodity/static/css/main.81236b98.chunk.css.map",
+    "static/css/2.5b9974be.chunk.css.map": "/ghana_gnpc_commodity/static/css/2.5b9974be.chunk.css.map",
+    "static/css/main.43b79afe.chunk.css.map": "/ghana_gnpc_commodity/static/css/main.43b79afe.chunk.css.map",
     "static/media/gnpc_commodity_exports.csv": "/ghana_gnpc_commodity/static/media/gnpc_commodity_exports.97d62662.csv",
+    "static/media/react-widgets.css": "/ghana_gnpc_commodity/static/media/rw-widgets.eceddf47.ttf",
     "static/media/logo.svg": "/ghana_gnpc_commodity/static/media/logo.5d5d9eef.svg"
   }
 }
