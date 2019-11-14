@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8ecb636a59e05d9fc457c331c70f490b",
+    "revision": "f063929353e42a2bf7308e4c6f402265",
     "url": "/ghana_gnpc_commodity/index.html"
   },
   {
-    "revision": "c71cc85462ca088d6b62",
+    "revision": "3d81aee0ffbafd3cffa6",
     "url": "/ghana_gnpc_commodity/static/css/2.5b9974be.chunk.css"
   },
   {
-    "revision": "7107bf6ebbf9d8501f69",
-    "url": "/ghana_gnpc_commodity/static/css/main.43b79afe.chunk.css"
+    "revision": "8ea0c9a5ad581f41bdbb",
+    "url": "/ghana_gnpc_commodity/static/css/main.694e581d.chunk.css"
   },
   {
-    "revision": "c71cc85462ca088d6b62",
-    "url": "/ghana_gnpc_commodity/static/js/2.148f5673.chunk.js"
+    "revision": "3d81aee0ffbafd3cffa6",
+    "url": "/ghana_gnpc_commodity/static/js/2.b33bf5d6.chunk.js"
   },
   {
-    "revision": "7107bf6ebbf9d8501f69",
-    "url": "/ghana_gnpc_commodity/static/js/main.7dfcaacd.chunk.js"
+    "revision": "8ea0c9a5ad581f41bdbb",
+    "url": "/ghana_gnpc_commodity/static/js/main.23c264f0.chunk.js"
   },
   {
     "revision": "4b98e433b7b5bdb3f21d",
