@@ -1,7 +1,6 @@
 .MainVizComponent{
 
   text-align: center;
-  margin-left: 10px;
 
   .title {
 		font-size: 18px;
@@ -24,8 +23,8 @@
 		font-weight: 700;
 	}
 	
-	.border-lines {
-		stroke: #ddd;
+	.borderLines {
+		// stroke: #ddd;
 		stroke-width: 1px;
   }
 
@@ -62,5 +61,18 @@
     stroke-linecap: butt;
     stroke-linejoin: miter;
     // font-weight: 800;
+  }
+
+  .grid {
+    color: rgba(200,200,200,0.0);
+    
+  }
+  .tick {
+    color: rgba(200,200,200,0.7);
+  }
+  .tick text {
+    color: rgba(200,200,200,0.7);
+    font-size: 18px;
+    text-anchor: start;
   }
 }

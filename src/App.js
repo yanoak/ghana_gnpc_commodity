@@ -10,6 +10,8 @@ import Switch from "react-switch";
 import { Combobox } from 'react-widgets';
 import { scaleQuantize, nice } from 'd3-scale';
 import { extent } from 'd3-array';
+import * as moment from 'moment';
+
 
 class App extends Component {
 
@@ -23,7 +25,7 @@ class App extends Component {
       },
       currentFilters: [],
       data: [],
-      timeline: false,
+      timeline: true,
       revAsCircles: false
     };
     this.handleTimeLineChange = this.handleTimeLineChange.bind(this)
@@ -118,12 +120,18 @@ class App extends Component {
         default: break;
       }
     }
+    const [minDate,maxDate] = this.getDateExtent(filteredData);
+
 
     // console.log(filteredData);
     // console.log(currentFilters);
     this.setState({ filteredData });
     this.setState({ currentFilters });
+    this.setState({ minDate });
+    this.setState({ maxDate });
   }
+
+  getDateExtent = (data) => data.length ? extent([...data.map(d=>d.Date_of_sale),...data.map(d=>d.Payment_receipt_date)]) : [moment(),moment()];
 
   getData() {
     loadAllData()
@@ -151,6 +159,9 @@ class App extends Component {
         })
         console.log(trimmedData);
         
+        const [minDate,maxDate] = this.getDateExtent(trimmedData);
+
+        
         var years = ["All", ..._.uniq(trimmedData.map(d => d.Date_of_sale.year()))];
         var buyers = ["All", ..._.uniq(trimmedData.map(d => d.Buyer))];
         var destinations = ["All", ..._.uniq(trimmedData.map(d => d.Destination))];
@@ -160,7 +171,9 @@ class App extends Component {
           yearOptions: years,
           buyerOptions: buyers,
           destinationOptions: destinations,
-          priceOptions: priceRanges
+          priceOptions: priceRanges,
+          maxDate: maxDate,
+          minDate: minDate
         });
       })
   }
@@ -211,15 +224,21 @@ class App extends Component {
         {this.makeAFilterCombo('destination')}
         {this.makeAFilterCombo('year')}
         {this.makeAFilterCombo('price')}
+        <br/>
+        <br/>
+        Right click on the visualisation to save as an image.
         
         
 
         <div className="vizContainer">
+          
           <MainVizComponent
             data = {this.state.filteredData}
             width = {this.state.dimensions.width*.95 > 1200 ? this.state.dimensions.width*.95 : 1200}
             timeline = {this.state.timeline}
             revAsCircles = {this.state.revAsCircles}
+            maxDate = {this.state.maxDate}
+            minDate = {this.state.minDate}
           />
         </div>
         
